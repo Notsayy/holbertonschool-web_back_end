@@ -6,7 +6,7 @@ export default function guardail(mathFunction) {
   } catch (error) {
     queue.push(`Error: ${error.message}`);
   } finally {
-    queue.push('Guardail was processed');
+    queue.push('Guardrail was processed');
   }
   return queue;
 }
