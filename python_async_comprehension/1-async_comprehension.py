@@ -7,12 +7,12 @@ This module provides an asynchronous comprehension function that collects
 
 import asyncio
 import random
-from typing import List
+from typing import AsyncGenerator
 
 async_generator = __import__('0-async_generator').async_generator
 
 
-async def async_comprehension() -> List[float]:
+async def async_comprehension() -> AsyncGenerator[float, None]:
     """
     Collects 10 random floats from an asynchronous generator into a list.
 
