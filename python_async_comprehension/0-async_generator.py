@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import random
 import asyncio
+from typing import Generator, AsyncGenerator
 
 """
 This module contains an asynchronous generator function that yields
@@ -9,7 +10,7 @@ asynchronously between each yield.
 """
 
 
-async def async_generator():
+async def async_generator() -> AsyncGenerator[float, None]:
     """
     Asynchronous generator that yields 10 random floats.
 
