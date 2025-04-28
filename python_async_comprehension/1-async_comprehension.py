@@ -6,13 +6,11 @@ This module provides an asynchronous comprehension function that collects
 """
 
 import asyncio
-import random
-from typing import AsyncGenerator
-
+from typing import List
 async_generator = __import__('0-async_generator').async_generator
 
 
-async def async_comprehension() -> AsyncGenerator[float, None]:
+async def async_comprehension() -> List[float]:
     """
     Collects 10 random floats from an asynchronous generator into a list.
 
@@ -23,7 +21,4 @@ async def async_comprehension() -> AsyncGenerator[float, None]:
         List[float]: A list containing 10 random floating-point
         numbers between 0 and 10.
     """
-    random_numbers = []
-    async for i in async_generator():
-        random_numbers.append(i)
-    return random_numbers
+    return [i async for i in async_generator()]
