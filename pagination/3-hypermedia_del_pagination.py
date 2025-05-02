@@ -7,7 +7,6 @@ of popular baby names, with resilience to deletions in the underlying data.
 """
 
 import csv
-import math
 from typing import List, Dict
 
 
@@ -47,7 +46,8 @@ class Server:
         Creates and caches an indexed version of the dataset.
 
         Returns:
-            Dict[int, List]: A dictionary mapping index positions to dataset rows.
+            Dict[int, List]: A dictionary mapping index positions to dataset
+            rows.
         """
         if self.__indexed_dataset is None:
             dataset = self.dataset()
@@ -58,11 +58,14 @@ class Server:
 
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
         """
-        Retrieves a page of data starting from a given index, skipping any deleted entries.
+        Retrieves a page of data starting from a given index, skipping any
+        deleted entries.
 
         Args:
-            index (int, optional): The starting index for pagination. Defaults to 0 if None.
-            page_size (int, optional): The number of items to return in the page. Defaults to 10.
+            index (int, optional): The starting index for pagination.
+                Defaults to 0 if None.
+            page_size (int, optional): The number of items to return in the
+                page. Defaults to 10.
 
         Returns:
             Dict: A dictionary containing:
@@ -80,9 +83,8 @@ class Server:
         data = []
         current_index = index
         for _ in range(page_size):
-            while current_index not in indexed_data and current_index < len(
-                self.dataset()
-            ):
+            while (current_index not in indexed_data and
+                   current_index < len(self.dataset())):
                 current_index += 1
             if current_index >= len(self.dataset()):
                 break
