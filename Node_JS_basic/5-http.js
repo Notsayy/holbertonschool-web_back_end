@@ -23,28 +23,34 @@ const app = http.createServer(async (req, res) => {
         return;
       }
 
-      const students = lines
-        .slice(1)
-        .map((line) => {
-          const [firstname, , , field] = line.split(',');
-          return { firstname, field };
-        })
-        .filter((student) => student.firstname && student.field);
+      const students = [];
+      const fields = {};
 
-      const csStudents = students.filter((student) => student.field === 'CS');
-      const sweStudents = students.filter((student) => student.field === 'SWE');
+      for (let i = 1; i < lines.length; i++) {
+        if (lines[i].trim() === '') continue;
+
+        const [firstname, , , field] = lines[i].split(',');
+        if (!firstname || !field) continue;
+
+        students.push({ firstname, field });
+
+        if (!fields[field]) {
+          fields[field] = [];
+        }
+        fields[field].push(firstname);
+      }
 
       let response = 'This is the list of our students\n';
       response += `Number of students: ${students.length}\n`;
-      response += `Number of students in CS: ${
-        csStudents.length
-      }. List: ${csStudents.map((s) => s.firstname).join(', ')}\n`;
-      response += `Number of students in SWE: ${
-        sweStudents.length
-      }. List: ${sweStudents.map((s) => s.firstname).join(', ')}`;
+
+      for (const [field, names] of Object.entries(fields)) {
+        response += `Number of students in ${field}: ${
+          names.length
+        }. List: ${names.join(', ')}\n`;
+      }
 
       res.statusCode = 200;
-      res.end(response);
+      res.end(response.trim());
     } catch (error) {
       res.statusCode = 500;
       res.end(`This is the list of our students\n${error.message}`);
