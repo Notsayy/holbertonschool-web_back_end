@@ -8,47 +8,63 @@ function countStudents(path) {
         reject(new Error('Cannot load the database'));
         return;
       }
-
-      const lines = data.split('\n').filter((line) => line.trim() !== '');
-      if (lines.length <= 1) {
-        resolve('Number of students: 0');
-        return;
+      try {
+        const lines = data.split('\n').filter(line => line.trim() !== '');
+        if (lines.length === 0) {
+          resolve('Number of students: 0');
+          return;
+        }
+        const header = lines[0].split(',');
+        const fieldIndex = header.indexOf('field');
+        const firstNameIndex = header.indexOf('firstname');
+        const fields = {};
+        let count = 0;
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (line === '') continue;
+          const values = line.split(',');
+          if (values.length < header.length) continue;
+          const field = values[fieldIndex];
+          const firstname = values[firstNameIndex];
+          if (!fields[field]) fields[field] = [];
+          fields[field].push(firstname);
+          count++;
+        }
+        let result = `Number of students: ${count}`;
+        for (const [field, names] of Object.entries(fields)) {
+          result += `\nNumber of students in ${field}: ${names.length}. List: ${names.join(', ')}`;
+        }
+        resolve(result);
+      } catch {
+        reject(new Error('Cannot load the database'));
       }
-
-      const students = lines.slice(1);
-      const fields = {};
-      students.forEach((line) => {
-        const [firstName, , , field] = line.split(',');
-        if (!fields[field]) fields[field] = [];
-        fields[field].push(firstName);
-      });
-
-      let output = `Number of students: ${students.length}\n`;
-      for (const [field, names] of Object.entries(fields)) {
-        output += `Number of students in ${field}: ${
-          names.length
-        }. List: ${names.join(', ')}\n`;
-      }
-      resolve(output.trim());
     });
   });
 }
 
-const app = http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
+const database = process.argv[2];
 
+const app = http.createServer((req, res) => {
+  res.setHeader('Content-Type', 'text/plain');
   if (req.url === '/') {
+    res.statusCode = 200;
     res.end('Hello Holberton School!');
   } else if (req.url === '/students') {
-    const dbPath = process.argv[2];
-    res.write('This is the list of our students\n');
-    countStudents(dbPath)
-      .then((data) => res.end(data))
-      .catch((err) => res.end(err.message));
+    countStudents(database)
+      .then((output) => {
+        res.statusCode = 200;
+        res.end(`This is the list of our students\n${output}`);
+      })
+      .catch(() => {
+        res.statusCode = 200;
+        res.end('This is the list of our students\nCannot load the database');
+      });
   } else {
-    res.end();
+    res.statusCode = 404;
+    res.end('Not found');
   }
 });
 
 app.listen(1245);
+
 module.exports = app;
