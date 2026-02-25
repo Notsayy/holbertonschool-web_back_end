@@ -49,6 +49,7 @@ class RedactingFormatter(logging.Formatter):
                                   record.getMessage(), self.SEPARATOR)
         return super().format(record)
 
+
 PII_FIELDS: Tuple[str, ...] = ("name", "email", "phone", "ssn", "password")
 
 
