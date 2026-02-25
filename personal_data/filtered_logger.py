@@ -51,7 +51,7 @@ class RedactingFormatter(logging.Formatter):
 
     def format(self, record: logging.LogRecord) -> str:
         """
-        Format the log record, redacting specified fields.
+        Format the log record, redacting specified fields and adding spaces after separators.
 
         Args:
             record: The log record to format.
@@ -59,8 +59,12 @@ class RedactingFormatter(logging.Formatter):
         Returns:
             The formatted log message with sensitive fields redacted.
         """
-        record.msg = filter_datum(self.fields, self.REDACTION,
-                                  record.getMessage(), self.SEPARATOR)
+        msg = filter_datum(self.fields, self.REDACTION,
+                          record.getMessage(), self.SEPARATOR)
+        msg = msg.replace(';', '; ')
+        if msg.endswith('; '):
+            msg = msg[:-1]
+        record.msg = msg
         return super().format(record)
 
 
