@@ -8,7 +8,7 @@ information (such as PII) from log messages using regular expressions.
 
 import re
 import logging
-from typing import List
+from typing import List, Tuple
 
 
 def filter_datum(fields: List[str], redaction: str,
@@ -48,3 +48,16 @@ class RedactingFormatter(logging.Formatter):
         record.msg = filter_datum(self.fields, self.REDACTION,
                                   record.getMessage(), self.SEPARATOR)
         return super().format(record)
+
+PII_FIELDS: Tuple[str, ...] = ("name", "email", "phone", "ssn", "password")
+
+
+def get_logger() -> logging.Logger:
+    """Returns a logging.Logger configured for user data"""
+    logger = logging.getLogger("user_data")
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+    handler = logging.StreamHandler()
+    handler.setFormatter(RedactingFormatter(list(PII_FIELDS)))
+    logger.addHandler(handler)
+    return logger
