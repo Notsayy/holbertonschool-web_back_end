@@ -6,9 +6,11 @@ This module provides utilities for filtering and obfuscating sensitive
 information (such as PII) from log messages using regular expressions.
 """
 
+import os
 import re
 import logging
 from typing import List, Tuple
+import mysql.connector
 
 
 def filter_datum(fields: List[str], redaction: str,
@@ -51,6 +53,18 @@ class RedactingFormatter(logging.Formatter):
 
 
 PII_FIELDS: Tuple[str, ...] = ("name", "email", "phone", "ssn", "password")
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """Returns a MySQL database connector using
+    environment variable credentials."""
+
+    return mysql.connector.connect(
+        host=os.getenv("PERSONAL_DATA_DB_HOST", "localhost"),
+        user=os.getenv("PERSONAL_DATA_DB_USERNAME", "root"),
+        password=os.getenv("PERSONAL_DATA_DB_PASSWORD", ""),
+        database=os.getenv("PERSONAL_DATA_DB_NAME")
+    )
 
 
 def get_logger() -> logging.Logger:
