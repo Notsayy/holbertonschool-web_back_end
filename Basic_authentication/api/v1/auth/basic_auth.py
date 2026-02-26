@@ -9,7 +9,7 @@ class BasicAuth(Auth):
     """BasicAuth class that inherits from Auth."""
 
     def extract_base64_authorization_header(
-            self, authorization_header: str) -> Optional[str]:
+            self, authorization_header: Optional[str]) -> Optional[str]:
         """Extract the Base64 part of the Authorization header.
 
         Args:
@@ -27,7 +27,7 @@ class BasicAuth(Auth):
         return authorization_header[6:]
 
     def decode_base64_authorization_header(
-            self, base64_authorization_header: str) -> Optional[str]:
+            self, base64_authorization_header: Optional[str]) -> Optional[str]:
         """Decode a Base64 encoded authorization header.
 
         Args:
@@ -47,7 +47,7 @@ class BasicAuth(Auth):
             return None
 
     def extract_user_credentials(
-            self, decoded_base64_authorization_header: str
+            self, decoded_base64_authorization_header: Optional[str]
     ) -> Tuple[Optional[str], Optional[str]]:
         """Extract user email and password from a decoded Base64 header.
 
@@ -67,7 +67,7 @@ class BasicAuth(Auth):
         return email, password
 
     def user_object_from_credentials(
-            self, user_email: str, user_pwd: str) -> Optional[Any]:
+            self, user_email: Optional[str], user_pwd: Optional[str]) -> Optional[Any]:
         """Return the User instance matching the given email and password.
 
         Args:
@@ -92,3 +92,18 @@ class BasicAuth(Auth):
         if not user.is_valid_password(user_pwd):
             return None
         return user
+
+    def current_user(self, request=None) -> Optional[Any]:
+        """Retrieve the User instance for a given request.
+
+        Args:
+            request: The Flask request object.
+
+        Returns:
+            The authenticated User instance, or None if authentication fails.
+        """
+        header = self.authorization_header(request)
+        b64 = self.extract_base64_authorization_header(header)
+        decoded = self.decode_base64_authorization_header(b64)
+        email, password = self.extract_user_credentials(decoded)
+        return self.user_object_from_credentials(email, password)
