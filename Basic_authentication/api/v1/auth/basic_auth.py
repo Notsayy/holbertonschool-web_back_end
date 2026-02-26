@@ -67,7 +67,8 @@ class BasicAuth(Auth):
         return email, password
 
     def user_object_from_credentials(
-            self, user_email: Optional[str], user_pwd: Optional[str]) -> Optional[Any]:
+            self, user_email: Optional[str],
+            user_pwd: Optional[str]) -> Optional[Any]:
         """Return the User instance matching the given email and password.
 
         Args:
