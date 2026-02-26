@@ -1,71 +1,42 @@
-# Basic Authentication API
+# Simple API
 
-## Description
+Simple HTTP API for playing with `User` model.
 
-This project demonstrates the implementation of a Basic Authentication system for a simple RESTful API using Python and Flask. The goal is to understand the authentication process by building it step by step, including Base64 encoding and handling HTTP Authorization headers. **Note:** In real-world applications, you should use established libraries or frameworks for authentication.
 
-## Learning Objectives
+## Files
 
-By completing this project, you will be able to:
+### `models/`
 
-- Explain what authentication means
-- Understand Base64 encoding and how to encode a string in Base64
-- Describe Basic Authentication and its mechanism
-- Send and process the HTTP Authorization header
-- Implement a simple authentication system in Python
+- `base.py`: base of all models of the API - handle serialization to file
+- `user.py`: user model
 
-## Requirements
+### `api/v1`
 
-- Python 3.9
-- pip 25.3
-- All scripts must be executable and follow [pycodestyle](https://pycodestyle.pycqa.org/en/latest/) (version 2.5)
-- Each Python file, class, and function must have a meaningful docstring
-- All files must end with a new line
-- A `README.md` file is required at the root of the project
+- `app.py`: entry point of the API
+- `views/index.py`: basic endpoints of the API: `/status` and `/stats`
+- `views/users.py`: all users endpoints
 
-## Resources
 
-- [REST API Authentication Mechanisms](https://www.digitalocean.com/community/tutorials/api-authentication-mechanisms)
-- [Base64 in Python](https://docs.python.org/3/library/base64.html)
-- [HTTP header Authorization](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
-- [Flask Documentation](https://flask.palletsprojects.com/)
-- [Base64 - concept](https://en.wikipedia.org/wiki/Base64)
-
-## Project Structure
+## Setup
 
 ```
-Basic_authentication/
-├── README.md
-├── SimpleAPI/
-│   ├── README.md
-│   ├── requirements.txt
-│   ├── api/
-│   │   ├── __init__.py
-│   │   └── v1/
-│   │       ├── __init__.py
-│   │       ├── app.py
-│   │       └── views/
-│   │           ├── __init__.py
-│   │           ├── index.py
-│   │           └── users.py
-│   └── models/
-│       ├── __init__.py
-│       ├── base.py
-│       └── user.py
+$ pip3 install -r requirements.txt
 ```
 
-## Usage
 
-1. Install dependencies:
-   ```bash
-   pip install -r SimpleAPI/requirements.txt
-   ```
-2. Run the API:
-   ```bash
-   python3 SimpleAPI/api/v1/app.py
-   ```
-3. Use a tool like [Postman](https://www.postman.com/) or `curl` to interact with the API, sending the `Authorization` header as needed.
+## Run
 
-## Author
+```
+$ API_HOST=0.0.0.0 API_PORT=5000 python3 -m api.v1.app
+```
 
-[Notsayy](https://github.com/Notsayy)
+
+## Routes
+
+- `GET /api/v1/status`: returns the status of the API
+- `GET /api/v1/stats`: returns some stats of the API
+- `GET /api/v1/users`: returns the list of users
+- `GET /api/v1/users/:id`: returns an user based on the ID
+- `DELETE /api/v1/users/:id`: deletes an user based on the ID
+- `POST /api/v1/users`: creates a new user (JSON parameters: `email`, `password`, `last_name` (optional) and `first_name` (optional))
+- `PUT /api/v1/users/:id`: updates an user based on the ID (JSON parameters: `last_name` and `first_name`)
