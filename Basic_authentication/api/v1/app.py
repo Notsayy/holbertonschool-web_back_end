@@ -25,7 +25,9 @@ def before_request() -> None:
     """Filter each request before it is handled by a route."""
     if auth is None:
         return
-    excluded = ['/api/v1/status/', '/api/v1/unauthorized/', '/api/v1/forbidden/']
+    excluded = [
+        '/api/v1/status/', '/api/v1/unauthorized/', '/api/v1/forbidden/'
+    ]
     if not auth.require_auth(request.path, excluded):
         return
     if auth.authorization_header(request) is None:
