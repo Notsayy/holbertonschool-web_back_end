@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Module for API authentication management."""
 from flask import request
-from typing import List, TypeVar
+from typing import List, Optional, Any
 
 
 class Auth:
@@ -24,18 +24,20 @@ class Auth:
         normalized = path if path.endswith('/') else path + '/'
         return normalized not in excluded_paths
 
-    def authorization_header(self, request=None) -> str:
+    def authorization_header(self, request=None) -> Optional[str]:
         """Retrieve the authorization header from the request.
 
         Args:
             request: The Flask request object.
 
         Returns:
-            None always (to be implemented in subclasses).
+            The value of the Authorization header, or None if absent.
         """
-        return None
+        if request is None:
+            return None
+        return request.headers.get('Authorization', None)
 
-    def current_user(self, request=None) -> TypeVar('User'):
+    def current_user(self, request=None) -> Optional[Any]:
         """Retrieve the current authenticated user.
 
         Args:
