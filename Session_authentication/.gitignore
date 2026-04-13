@@ -4,3 +4,7 @@ __pycache__/
 
 # Ignore macOS metadata
 .DS_Store
+
+.venv/
+env/
+venv/
