@@ -16,11 +16,7 @@ def _hash_password(password: str) -> bytes:
 
 
 def _generate_uuid() -> str:
-    """Generate a new UUID and return its string representation.
-
-    Returns:
-        A string representation of a new UUID
-    """
+    """Generate a new UUID and return its string representation."""
     return str(uuid.uuid4())
 
 
@@ -50,3 +46,21 @@ class Auth:
             )
         except NoResultFound:
             return False
+
+    def create_session(self, email: str) -> str:
+        """Create a new session for the user with the given email.
+
+        Args:
+            email: the user's email address
+
+        Returns:
+            The newly generated session ID as a string,
+            or None if the user does not exist
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+            session_id = _generate_uuid()
+            self._db.update_user(user.id, session_id=session_id)
+            return session_id
+        except NoResultFound:
+            return None
