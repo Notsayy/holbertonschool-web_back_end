@@ -40,18 +40,7 @@ class DB:
         return new_user
 
     def find_user_by(self, **kwargs) -> User:
-        """Find the first user matching the given keyword arguments.
-
-        Args:
-            **kwargs: column filters to apply (e.g. email="a@b.com")
-
-        Returns:
-            The first matching User object
-
-        Raises:
-            InvalidRequestError: if a keyword does not match any column
-            NoResultFound: if no user matches the filters
-        """
+        """Find the first user matching the given keyword arguments."""
         valid_columns = {c.key for c in User.__table__.columns}
         for key in kwargs:
             if key not in valid_columns:
@@ -63,3 +52,26 @@ class DB:
         if user is None:
             raise NoResultFound("No user found matching the given criteria")
         return user
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """Update a user's attributes and commit changes to the database.
+
+        Args:
+            user_id: the ID of the user to update
+            **kwargs: user attributes to update
+
+        Returns:
+            None
+
+        Raises:
+            ValueError: if a key does not correspond to a User attribute
+        """
+        user = self.find_user_by(id=user_id)
+
+        valid_columns = {c.key for c in User.__table__.columns}
+        for key, value in kwargs.items():
+            if key not in valid_columns:
+                raise ValueError(f"'{key}' is not a valid attribute of User")
+            setattr(user, key, value)
+
+        self._session.commit()
