@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Unit tests for utility functions in utils.py."""
 import unittest
 from parameterized import parameterized
