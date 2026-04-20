@@ -19,7 +19,7 @@ class TestAccessNestedMap(unittest.TestCase):
 
 
 class TestAccessNestedMap(unittest.TestCase):
-    """Test cases for the access_nested_map function when it raises exceptions."""
+    """Test cases for the function when it raises exceptions."""
 
     @parameterized.expand([
         ({}, ("a",)),
