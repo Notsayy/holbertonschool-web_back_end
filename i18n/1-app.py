@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+"""Flask app with Babel extension for internationalization support."""
 from flask import Flask, render_template
 from flask_babel import Babel
 
 
 class Config:
+    """App configuration with supported languages and Babel defaults."""
     LANGUAGES = ["en", "fr"]
     BABEL_DEFAULT_LOCALE = "en"
     BABEL_DEFAULT_TIMEZONE = "UTC"
@@ -16,4 +18,5 @@ babel = Babel(app)
 
 @app.route('/')
 def index():
+    """Render the index page."""
     return render_template('1-index.html')
