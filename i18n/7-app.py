@@ -57,7 +57,7 @@ def get_locale():
     return app.config['BABEL_DEFAULT_LOCALE']
 
 
-def get_timezone():
+def get_timezone() -> str:
     """Determine timezone with priority: URL > user > default UTC."""
     timezone = request.args.get('timezone')
     if timezone:
