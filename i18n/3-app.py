@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Flask app with Babel i18n using gettext for template parametrization."""
 from flask import Flask, render_template, request
-from flask_babel import Babel, _
-
+from flask_babel import Babel, gettext as _
 
 class Config:
     """App configuration with supported languages and Babel defaults."""
